@@ -1,1 +1,433 @@
-hello
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Manish Vadher</title>
+<meta name="description" content="Manish Vadher — Senior Software Developer: .NET backend, Azure, SQL Server and multi-tenant SaaS.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky bar · split hero (pitch + live API response) · stat strip · filterable project grid · role timeline · contact */
+:root{
+  --bg:#F3F5F9; --surface:#FFFFFF; --ink:#111827; --muted:#5A6478; --line:#DCE1EA;
+  --accent:#2347D1; --accent-soft:#E4EAFF; --ok:#1F8A5B; --key:#9A3FB8; --str:#B5541B;
+  --code-bg:#0F1522; --code-ink:#D8DEEA; --code-muted:#7B869C;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D121B; --surface:#151C29; --ink:#E6EAF2; --muted:#98A2B6; --line:#263044;
+  --accent:#8EA6FF; --accent-soft:#1E2950; --ok:#5BCB95; --key:#D59CF0; --str:#F0A46E;
+  --code-bg:#090D15; --code-ink:#D8DEEA; --code-muted:#6E7990; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D121B; --surface:#151C29; --ink:#E6EAF2; --muted:#98A2B6; --line:#263044;
+  --accent:#8EA6FF; --accent-soft:#1E2950; --ok:#5BCB95; --key:#D59CF0; --str:#F0A46E;
+  --code-bg:#090D15; --code-ink:#D8DEEA; --code-muted:#6E7990; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--f-mono)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.1}
+section{scroll-margin-top:72px}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:20px;padding-block:12px}
+.brand{font-family:var(--f-mono);font-weight:500;color:var(--ink);text-decoration:none;font-size:.95rem}
+.brand b{color:var(--accent);font-weight:500}
+.nav ul{display:flex;gap:4px;list-style:none;margin:0 0 0 auto;padding:0}
+.nav ul a{color:var(--muted);text-decoration:none;font-size:.92rem;padding:6px 10px;border-radius:6px}
+.nav ul a:hover,.nav ul a.on{color:var(--ink);background:var(--accent-soft)}
+.theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;width:36px;height:36px;cursor:pointer;display:grid;place-items:center;flex:none}
+@media (max-width:720px){.nav ul{display:none}.theme-btn{margin-left:auto}}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.15fr 1fr;gap:48px;align-items:center;padding-block:72px 48px}
+.hero>*{min-width:0}
+.eyebrow{font-family:var(--f-mono);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+.hero h1{font-size:clamp(2.6rem,6vw,4.4rem);font-weight:800;letter-spacing:-.02em}
+.hero .role{font-family:var(--f-display);font-weight:500;font-size:clamp(1.15rem,2.2vw,1.45rem);color:var(--muted);margin:14px 0 18px}
+.hero p.lede{max-width:58ch;margin:0 0 26px}
+.ctas{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 .95rem var(--f-body);padding:11px 18px;border-radius:8px;text-decoration:none;border:1px solid var(--accent);cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--bg)}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn:hover{filter:brightness(1.08)}
+.meta-line{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:22px;font-size:.88rem;color:var(--muted)}
+
+.api{background:var(--code-bg);color:var(--code-ink);border-radius:12px;font-family:var(--f-mono);font-size:.84rem;line-height:1.7;overflow:hidden;box-shadow:0 18px 40px -20px rgba(15,21,34,.5)}
+.api-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:12px 16px;border-bottom:1px solid #222B3D}
+.verb{background:#2347D1;color:#fff;padding:1px 7px;border-radius:4px;font-size:.75rem;font-weight:500}
+.path{color:var(--code-ink);word-break:break-all}
+.status{margin-left:auto;color:#5BCB95;font-size:.78rem}
+.api pre{margin:0;padding:16px;overflow-x:auto;white-space:pre}
+.api .k{color:#D59CF0}.api .s{color:#F0A46E}.api .n{color:#7FD3F7}.api .c{color:var(--code-muted)}
+.cursor{display:inline-block;width:8px;height:1em;background:var(--code-ink);vertical-align:-2px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.api-foot{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 14px}
+.api-foot button{font:500 .75rem var(--f-mono);background:#1A2335;color:var(--code-ink);border:1px solid #2A3550;border-radius:5px;padding:4px 9px;cursor:pointer}
+.api-foot button[aria-pressed="true"]{border-color:#8EA6FF;color:#8EA6FF}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-block:1px solid var(--line)}
+.stat{padding:24px 20px;border-left:1px solid var(--line)}
+.stat:first-child{border-left:0;padding-left:0}
+.stat strong{display:block;font-family:var(--f-display);font-size:2.2rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.stat span{display:block;color:var(--muted);font-size:.88rem;margin-top:8px}
+@media (max-width:760px){.stats{grid-template-columns:1fr 1fr}.stat:nth-child(3){border-left:0;padding-left:0}.stat:nth-child(n+3){border-top:1px solid var(--line)}}
+
+/* sections */
+.sec{padding-block:72px 8px}
+.sec-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 20px;margin-bottom:28px}
+.sec-head h2{font-size:clamp(1.8rem,3.5vw,2.5rem);font-weight:700;letter-spacing:-.01em}
+.sec-head p{color:var(--muted);margin:0;max-width:60ch}
+
+/* skills */
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px 40px}
+.skill-group h3{font:500 .78rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 .86rem var(--f-body);padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+button.chip{cursor:pointer}
+button.chip:hover{border-color:var(--accent);color:var(--accent)}
+button.chip.linked::after{content:" ↗";color:var(--accent);font-size:.8em}
+
+/* projects */
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px}
+.filters .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.filters .count{opacity:.65;font-variant-numeric:tabular-nums;margin-left:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:12px;min-width:0;transition:border-color .2s,transform .2s}
+.card:hover{border-color:var(--accent)}
+.card.featured{grid-column:span 2}
+@media (max-width:720px){.card.featured{grid-column:auto}}
+.card-top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.card h3{font-size:1.3rem;font-weight:700}
+.card .where{font:400 .78rem var(--f-mono);color:var(--muted);margin-top:4px}
+.badge{flex:none;font:500 .74rem var(--f-mono);color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent);padding:3px 8px;border-radius:5px;white-space:nowrap}
+.card p{margin:0;color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto}
+.tag{font:400 .74rem var(--f-mono);color:var(--muted);border:1px solid var(--line);padding:2px 7px;border-radius:4px}
+.tag.hit{color:var(--accent);border-color:var(--accent)}
+details{border-top:1px dashed var(--line);padding-top:10px}
+summary{cursor:pointer;font-weight:600;font-size:.9rem;color:var(--accent);list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+ ";font-family:var(--f-mono)}
+details[open] summary::before{content:"− "}
+details ul{margin:10px 0 0;padding-left:18px;font-size:.92rem}
+details li{margin-bottom:6px}
+.empty{color:var(--muted)}
+
+/* timeline */
+.timeline{list-style:none;margin:0;padding:0;position:relative}
+.timeline::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.job{position:relative;padding:0 0 32px 36px}
+.job::before{content:"";position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
+.job.current::before{background:var(--accent)}
+.job-head{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline}
+.job h3{font-size:1.25rem;font-weight:700}
+.job .dates{font:400 .82rem var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.job .co{color:var(--accent);font-weight:600;margin:2px 0 8px}
+.job ul{margin:0;padding-left:18px;max-width:75ch}
+.job li{margin-bottom:5px}
+.job .toggle{margin-top:8px;background:none;border:0;color:var(--accent);font:600 .88rem var(--f-body);cursor:pointer;padding:0}
+.edu{margin-top:8px;padding:18px 22px;border:1px solid var(--line);border-radius:10px;background:var(--surface);display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline}
+.edu strong{font-family:var(--f-display);font-size:1.1rem}
+.edu span{color:var(--muted);font-size:.9rem}
+
+/* contact */
+.contact{margin-block:72px 40px;background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding-block:40px}
+.contact .inner{padding-inline:clamp(20px,4vw,48px);display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center}
+.contact .inner>*{min-width:0}
+.contact h2{font-size:clamp(1.8rem,3.5vw,2.6rem);color:#fff}
+.contact p{color:#AAB4C8;margin:12px 0 0;max-width:46ch}
+.rows{display:grid;gap:10px}
+.row{display:flex;align-items:center;gap:12px;background:#151D2D;border:1px solid #243049;border-radius:8px;padding:10px 12px}
+.row .lbl{font:500 .72rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:#7B869C;width:72px;flex:none}
+.row .val{flex:1;min-width:0;font-family:var(--f-mono);font-size:.88rem;overflow-wrap:anywhere;color:#E6EAF2;text-decoration:none}
+.row a.val:hover{color:#8EA6FF}
+.row button{flex:none;font:500 .75rem var(--f-mono);background:#2347D1;color:#fff;border:0;border-radius:5px;padding:5px 10px;cursor:pointer}
+@media (max-width:820px){.hero{grid-template-columns:1fr;padding-block:48px 36px;gap:32px}.contact .inner{grid-template-columns:1fr}}
+footer{color:var(--muted);font-size:.85rem;padding-block:0 40px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:.88rem;z-index:20}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><b>~/</b>manish-vadher</a>
+    <ul>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch colour theme">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+    <section class="hero" aria-label="Introduction">
+      <div>
+        <p class="eyebrow">Senior Software Developer · Surat, India</p>
+        <h1>Manish Vadher</h1>
+        <p class="role">.NET backend, Azure &amp; SQL Server for multi-tenant SaaS</p>
+        <p class="lede">12+ years building backend services, APIs and multi-tenant SaaS products. I build the backend of BSOne Uplift, a Microsoft 365 productivity SaaS with 6,000+ concurrent users, and the integration that lets its users manage tasks from Microsoft Copilot. I've taken client apps from unclear requirements to production on my own, and led development teams for over six years.</p>
+        <div class="ctas">
+          <a class="btn primary" href="#projects">See projects</a>
+          <a class="btn ghost" href="https://linkedin.com/in/manish-vadher" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn ghost" href="#contact">Get in touch</a>
+        </div>
+        <div class="meta-line"><span>C# · ASP.NET Core · SQL Server · Azure</span><span>Microsoft Graph · MCP · Entra ID</span></div>
+      </div>
+
+      <div class="api" aria-label="Profile shown as an API response">
+        <div class="api-head">
+          <span class="verb">GET</span>
+          <span class="path" id="apiPath">/api/developers/manish-vadher</span>
+          <span class="status">200 OK · 38 ms</span>
+        </div>
+        <pre id="apiBody"></pre>
+        <div class="api-foot" role="group" aria-label="Choose endpoint">
+          <button type="button" data-ep="profile" aria-pressed="true">/profile</button>
+          <button type="button" data-ep="uplift" aria-pressed="false">/projects/uplift</button>
+          <button type="button" data-ep="stack" aria-pressed="false">/stack</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="stats">
+      <div class="stat"><strong data-count="12" data-suffix="+">12+</strong><span>years building backends</span></div>
+      <div class="stat"><strong data-count="6000" data-suffix="+">6,000+</strong><span>concurrent users on Uplift</span></div>
+      <div class="stat"><strong data-count="60" data-suffix="+">60+</strong><span>customers billed by Retrac</span></div>
+      <div class="stat"><strong data-count="6" data-suffix="+ yrs">6+ yrs</strong><span>leading dev teams</span></div>
+    </div>
+
+    <section class="sec" id="skills">
+      <div class="sec-head">
+        <h2>Skills</h2>
+        <p>Tap a skill marked ↗ to see the projects that use it.</p>
+      </div>
+      <div class="skills" id="skillsBox"></div>
+    </section>
+
+    <section class="sec" id="projects">
+      <div class="sec-head">
+        <h2>Projects</h2>
+        <p>Products and client systems from baliosoft, Dharvee Infotech and Codezee.</p>
+      </div>
+      <div class="filters" id="filters" role="group" aria-label="Filter projects by technology"></div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <section class="sec" id="experience">
+      <div class="sec-head">
+        <h2>Experience</h2>
+        <p>Jul 2014 – present</p>
+      </div>
+      <ol class="timeline" id="timeline"></ol>
+      <div class="edu">
+        <strong>BCA, Bachelor of Computer Applications</strong>
+        <span>VNSGU, Gujarat · 2014</span>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="inner">
+        <div>
+          <h2>Let's talk backend.</h2>
+          <p>Open to conversations about senior .NET roles, SaaS backends and Microsoft 365 / Azure integration work.</p>
+        </div>
+        <div class="rows">
+          <div class="row"><span class="lbl">Email</span><a class="val" id="email" href="mailto:manishvadher15@gmail.com">manishvadher15@gmail.com</a><button type="button" data-copy="email">Copy</button></div>
+          <div class="row"><span class="lbl">Phone</span><span class="val" id="phone">+91 99130 91438</span><button type="button" data-copy="phone">Copy</button></div>
+          <div class="row"><span class="lbl">LinkedIn</span><a class="val" href="https://linkedin.com/in/manish-vadher" target="_blank" rel="noopener">linkedin.com/in/manish-vadher</a></div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <footer class="wrap"><span>© 2026 Manish Vadher</span><span class="mono">Surat, Gujarat, India</span></footer>
+</main>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+  /* theme */
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  try{var saved=localStorage.getItem('mv-theme'); if(saved) root.setAttribute('data-theme',saved);}catch(e){}
+  btn.addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    var next=cur==='dark'?'light':'dark'; root.setAttribute('data-theme',next);
+    try{localStorage.setItem('mv-theme',next);}catch(e){}
+  });
+
+  /* API card */
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+  function json(o,ind){
+    ind=ind||'';var pad=ind+'  ';
+    if(Array.isArray(o)) return '['+o.map(function(v){return json(v,pad)}).join(', ')+']';
+    if(o&&typeof o==='object'){
+      var ks=Object.keys(o);
+      return '{\n'+ks.map(function(k,i){return pad+'<span class="k">"'+esc(k)+'"</span>: '+json(o[k],pad)+(i<ks.length-1?',':'')}).join('\n')+'\n'+ind+'}';
+    }
+    if(typeof o==='string') return '<span class="s">"'+esc(o)+'"</span>';
+    return '<span class="n">'+o+'</span>';
+  }
+  var eps={
+    profile:{path:'/api/developers/manish-vadher',data:{role:'Senior Software Developer',experienceYears:12,currentlyAt:'baliosoft Solutions',focus:'Multi-tenant SaaS & Microsoft 365 integrations',stack:['C#','ASP.NET Core','SQL Server','Azure'],location:'Surat, India'}},
+    uplift:{path:'/api/projects/bsone-uplift',data:{type:'Multi-tenant Microsoft 365 SaaS',concurrentUsers:6000,listedOn:['Microsoft Marketplace','Microsoft Store'],sources:['SharePoint','Outlook','Planner','To Do','Azure DevOps'],tenancy:'database-per-tenant',copilot:'MCP server + connector'}},
+    stack:{path:'/api/developers/manish-vadher/stack',data:{backend:['ASP.NET Core','EF Core','Dapper'],realtime:['SignalR','Hangfire','Azure Queues'],azure:['Functions','Key Vault','Redis','App Insights'],data:['SQL Server','Dataverse','PostgreSQL'],identity:['Entra ID SSO','JWT / OAuth']}}
+  };
+  var body=document.getElementById('apiBody'),path=document.getElementById('apiPath');
+  function show(k){path.textContent=eps[k].path;body.innerHTML=json(eps[k].data)+'\n<span class="c">// </span><span class="cursor"></span>';
+    document.querySelectorAll('[data-ep]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.ep===k))});}
+  document.querySelectorAll('[data-ep]').forEach(function(b){b.addEventListener('click',function(){show(b.dataset.ep)})});
+  show('profile');
+
+  /* data */
+  var projects=[
+    {name:'BSOne Uplift',where:'baliosoft · Microsoft 365 SaaS',badge:'6,000+ users',featured:true,
+     desc:'Brings tasks from SharePoint, Outlook, Planner, Microsoft To Do and Azure DevOps into one place. Listed on Microsoft Marketplace and the Microsoft Store.',
+     points:['REST APIs, background services and server-side logic for Super Admin and Tenant Admin portals on a database-per-tenant architecture.','Built an MCP server and Microsoft Copilot connector so users view and act on their Uplift tasks from Copilot.','Microsoft 365 sync features using Graph change notifications, delta sync and background services.','APIs secured with Entra ID SSO and JWT / OAuth; real-time updates to clients with SignalR.','Diagnose and fix production issues to improve API and background-service stability and performance.'],
+     tags:['ASP.NET Core','SQL Server','Azure','Microsoft Graph','MCP','SignalR','Entra ID','SharePoint']},
+    {name:'Retrac Portal',where:'baliosoft · Sole developer',badge:'60+ customers',featured:true,
+     desc:'Microsoft license management and monthly billing across Partner Center, Rhipe (Prism) and ConnectWise. Took over with unclear requirements, clarified scope with the client, then designed and built it alone.',
+     points:['Integrated Partner Center (license assignment), Rhipe (tenant subscriptions) and ConnectWise (products), with product and customer mapping across all three.','Customer detail page where technicians see mapped prices and licenses and assign licenses and bundles with effective dates.','Monthly invoice generation from license assignments, invoice emails, and payment status updates.','Custom pricing module with default and customer-specific prices.','Email-to-ticket: customer emails become ConnectWise tickets, and each technician action sends a tailored email update.','Role- and permission-based login for staff and customer users.'],
+     tags:['ASP.NET Core','SQL Server','ConnectWise','Partner Center','Rhipe']},
+    {name:'Fee App',where:'baliosoft · Service renewals',desc:'ASP.NET Core MVC app on Microsoft Dataverse holding each client’s household details, income, assets and other financial records.',
+     points:['Automated renewals: fee records are created in Dataverse when a client’s service period is within 90 days of expiry.','Power Automate flows notify users in Microsoft Teams when they are mentioned.'],
+     tags:['ASP.NET Core','Dataverse','Power Automate']},
+    {name:'Customer Data Sync',where:'baliosoft · Integrations',desc:'One-way and two-way sync from Salesforce, Jira and customer databases into SharePoint.',
+     points:['One-way and two-way data sync from Salesforce, Jira and customer databases to SharePoint.','Sync from a third-party HR system into on-premise Active Directory, removing manual user management.'],
+     tags:['SharePoint','Salesforce','Jira','Active Directory']},
+    {name:'NetZoom Enterprise',where:'Dharvee Infotech · DCIM software',desc:'Data-centre infrastructure management for colocation, government, manufacturing, financial, medical and education data centres.',
+     points:['Started the new .NET Core backend to replace legacy technology and built its base structure.','Entity management tool for data import; designed a new database from scratch for new installations.','APIs for the inventory collection mobile app: audit sessions, assigned teams, asset capture by QR code, barcode or manual entry.'],
+     tags:['.NET Core','SQL Server','Web API']},
+    {name:'Narmada',where:'Codezee · Multi-tenant platform',desc:'Built from scratch: assets, health checks and policies, with weekly email reports for Super Admin, Tenant and Client roles.',
+     points:['Multi-tenant platform with three role levels.','Scheduled weekly email reports with Hangfire.'],
+     tags:['.NET Core','SQL Server','Hangfire','jQuery']},
+    {name:'Diamond Trading Platform',where:'Codezee · Buy & sell app',desc:'Backend, web application and mobile APIs for a diamond marketplace, with search by shape, cut, clarity and more, plus stock import.',
+     points:['Parameter search across shape, cut, clarity and other attributes.','Diamond stock import pipeline.'],
+     tags:['Web API','SQL Server']},
+    {name:'Web DiamX',where:'Codezee · Diamond ERP',desc:'Web version of a diamond ERP covering accounts, purchase orders, sales orders and diamond stock.',
+     points:['Accounts, purchase orders, sales orders and stock modules.'],
+     tags:['ASP.NET MVC','Entity Framework','Web API','jQuery']},
+    {name:'Association App',where:'Codezee · Web API',desc:'Web API for companies, employees and police verification.',
+     points:['Company and employee records with police verification workflow.'],
+     tags:['.NET Core','PostgreSQL','Entity Framework']},
+    {name:'CA Manager',where:'Codezee · Web API',desc:'Web API to manage client documents, reminders and payments for chartered accountants.',
+     points:['Client documents, reminders and payment tracking.'],
+     tags:['.NET Core','SQL Server']}
+  ];
+  var skills=[
+    ['Backend',['C#','ASP.NET Core','.NET Core','.NET Framework','ASP.NET MVC','Web API','Entity Framework','EF Core','Dapper','LINQ','REST APIs']],
+    ['Background & real-time',['Background services','Hangfire','Azure Queues','SignalR','Graph change notifications']],
+    ['Azure & DevOps',['Azure','Azure Functions','Key Vault','Redis Cache','Application Insights','Azure Storage','Azure DevOps CI/CD','Git / GitHub','Windows Server']],
+    ['Data',['SQL Server','Dataverse','PostgreSQL','Stored procedures','Query tuning','Schema Compare']],
+    ['Integrations & identity',['Microsoft Graph','SharePoint','Planner','Microsoft To Do','Dynamics 365','Power Automate','Active Directory','Salesforce','Jira','ConnectWise','Partner Center','Rhipe','Entra ID','JWT / OAuth']],
+    ['Frontend, architecture & AI',['React JS','JavaScript','jQuery','HTML5 / CSS3','Multi-tenant SaaS','Data sync','Design patterns','MCP','Claude','GitHub Copilot']]
+  ];
+  var jobs=[
+    {title:'Senior Software Engineer',co:'baliosoft Solutions Pvt. Ltd.',dates:'Dec 2023 – Present',current:true,
+     pts:['Develop backend services and REST APIs for SaaS products and client projects with C#, ASP.NET Core, SQL Server and Azure.','Build and deploy through Azure DevOps CI/CD, testing each change in a separate TEST environment before QA hand-off.','Review pull requests and guide team members; use Claude and GitHub Copilot for requirement analysis, design, coding and code review.','Projects: BSOne Uplift, Retrac Portal, Fee App, customer data sync.']},
+    {title:'Senior Software Engineer',co:'Dharvee Infotech',dates:'Feb 2022 – Dec 2023',
+     pts:['Started the new .NET Core backend for NetZoom Enterprise, replacing legacy technology.','Built the entity management import tool and designed a new database for new installations.','Built APIs for the inventory collection mobile app and supported the React Native developer.']},
+    {title:'Senior Software Engineer & Team Leader',co:'Codezee Solutions Pvt. Ltd., Surat',dates:'Jul 2015 – Feb 2022',
+     pts:['Led the development team: assigned tasks, reviewed code and kept client projects on schedule.','Designed SQL Server databases and stored procedures, built Web APIs and deployed to Windows Server.','Projects: Narmada, Diamond Trading Platform, Web DiamX, Association App, CA Manager, internal Task Manager.']},
+    {title:'Junior Website Developer',co:'Gati Softtech, Surat',dates:'Jul 2014 – Jul 2015',
+     pts:['Built and maintained ASP.NET web applications for diamond, jewellery and restaurant businesses.']}
+  ];
+
+  /* filters + grid */
+  var counts={};projects.forEach(function(p){p.tags.forEach(function(t){counts[t]=(counts[t]||0)+1})});
+  var filterTags=Object.keys(counts).sort(function(a,b){return counts[b]-counts[a]||a.localeCompare(b)});
+  var active='All', fBox=document.getElementById('filters'), grid=document.getElementById('grid');
+  function renderFilters(){
+    fBox.innerHTML=['All'].concat(filterTags).map(function(t){
+      var n=t==='All'?projects.length:counts[t];
+      return '<button type="button" class="chip" aria-pressed="'+(t===active)+'" data-f="'+esc(t)+'">'+esc(t)+'<span class="count">'+n+'</span></button>';
+    }).join('');
+  }
+  function renderGrid(){
+    var list=projects.filter(function(p){return active==='All'||p.tags.indexOf(active)>-1});
+    grid.innerHTML=list.map(function(p){
+      return '<article class="card'+(p.featured&&active==='All'?' featured':'')+'">'+
+        '<div class="card-top"><div><h3>'+esc(p.name)+'</h3><div class="where">'+esc(p.where)+'</div></div>'+(p.badge?'<span class="badge">'+esc(p.badge)+'</span>':'')+'</div>'+
+        '<p>'+esc(p.desc)+'</p>'+
+        '<details><summary>What I built</summary><ul>'+p.points.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul></details>'+
+        '<div class="tags">'+p.tags.map(function(t){return '<span class="tag'+(t===active?' hit':'')+'">'+esc(t)+'</span>'}).join('')+'</div></article>';
+    }).join('')||'<p class="empty">No projects use this yet.</p>';
+  }
+  function setFilter(t){active=t;renderFilters();renderGrid();}
+  fBox.addEventListener('click',function(e){var b=e.target.closest('[data-f]');if(b)setFilter(b.dataset.f)});
+  renderFilters();renderGrid();
+
+  /* skills */
+  var alias={'Web API':'Web API','Entity Framework':'Entity Framework','EF Core':'Entity Framework','Microsoft Graph':'Microsoft Graph','Graph change notifications':'Microsoft Graph','Entra ID':'Entra ID'};
+  document.getElementById('skillsBox').innerHTML=skills.map(function(g){
+    return '<div class="skill-group"><h3>'+esc(g[0])+'</h3><div class="chips">'+g[1].map(function(s){
+      var target=alias[s]||(counts[s]?s:null);
+      return target?'<button type="button" class="chip linked" data-skill="'+esc(target)+'">'+esc(s)+'</button>':'<span class="chip">'+esc(s)+'</span>';
+    }).join('')+'</div></div>';
+  }).join('');
+  document.getElementById('skillsBox').addEventListener('click',function(e){
+    var b=e.target.closest('[data-skill]');if(!b)return;setFilter(b.dataset.skill);
+    document.getElementById('projects').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  });
+
+  /* timeline */
+  document.getElementById('timeline').innerHTML=jobs.map(function(j,i){
+    var first=j.pts.slice(0,2),rest=j.pts.slice(2);
+    return '<li class="job'+(j.current?' current':'')+'"><div class="job-head"><h3>'+esc(j.title)+'</h3><span class="dates">'+esc(j.dates)+'</span></div>'+
+      '<div class="co">'+esc(j.co)+'</div><ul>'+first.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+
+      rest.map(function(x){return '<li class="more" hidden>'+esc(x)+'</li>'}).join('')+'</ul>'+
+      (rest.length?'<button type="button" class="toggle" aria-expanded="false" id="jt'+i+'">Show '+rest.length+' more</button>':'')+'</li>';
+  }).join('');
+  document.getElementById('timeline').addEventListener('click',function(e){
+    var b=e.target.closest('.toggle');if(!b)return;var open=b.getAttribute('aria-expanded')!=='true';
+    b.closest('.job').querySelectorAll('.more').forEach(function(li){li.hidden=!open});
+    b.setAttribute('aria-expanded',String(open));
+    b.textContent=open?'Show less':'Show '+b.closest('.job').querySelectorAll('.more').length+' more';
+  });
+
+  /* count-up (final values already in the markup) */
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.querySelectorAll('[data-count]').forEach(function(el){
+      var end=+el.dataset.count,suf=el.dataset.suffix,t0=null;
+      function step(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/1100,1),v=Math.round(end*(1-Math.pow(1-p,3)));
+        el.textContent=v.toLocaleString('en-US')+suf;if(p<1)requestAnimationFrame(step);}
+      requestAnimationFrame(step);
+    });
+  }
+
+  /* nav highlight */
+  var links=document.querySelectorAll('.nav ul a');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+en.target.id)})}})},{rootMargin:'-40% 0px -55% 0px'});
+    ['skills','projects','experience','contact'].forEach(function(id){io.observe(document.getElementById(id))});
+  }
+
+  /* copy */
+  var toast=document.getElementById('toast'),tt;
+  function say(m){toast.textContent=m;toast.hidden=false;clearTimeout(tt);tt=setTimeout(function(){toast.hidden=true},1800)}
+  document.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
+    var el=document.getElementById(b.dataset.copy),txt=el.textContent.trim();
+    function fallback(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);say('Selected — press Ctrl+C to copy')}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){say('Copied '+txt)},fallback)}else fallback();
+  })});
+})();
+</script>
+</body>
+</html>
